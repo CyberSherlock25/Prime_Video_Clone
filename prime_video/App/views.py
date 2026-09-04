@@ -1,3 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
-# Create your views here.
+from .models import Movie
+
+
+def home(request):
+    movies = Movie.objects.all()
+    featured_movie = movies.filter(is_featured=True).first() or movies.first()
+    return render(request, "index.html", {"movies": movies, "featured_movie": featured_movie})
+
+
+def movie_detail(request, movie_id):
+    movie = get_object_or_404(Movie, id=movie_id)
+    return render(request, "movie_detail.html", {"movie": movie})
+    

@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Prime Video</title>
+
+    <style>
+        :root {
+            --nav: #0f171e;
+            --page: #041530;
+            --card: #18232f;
+            --blue: #00a8e1;
+            --muted: #a6b0bb;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--page);
+            color: #f5f7fa;
+            font: 16px Arial;
+        }
+
+        .nav {
+            height: 68px;
+            background: var(--nav);
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            gap: 32px;
+        }
+
+        .brand {
+            font-size: 25px;
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .brand span {
+            color: var(--blue);
+        }
+
+        .links {
+            display: flex;
+            gap: 22px;
+        }
+
+        .links a,
+        .account a {
+            color: #d9e1e8;
+            text-decoration: none;
+        }
+
+        .account {
+            margin-left: auto;
+        }
+
+        .button {
+            display: inline-block;
+            border-radius: 4px;
+            padding: 12px 22px;
+            background: var(--blue);
+            color: #00111b;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .hero {
+            min-height: 390px;
+            padding: 90px 8%;
+            display: flex;
+            align-items: center;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #00050d 10%,
+                    rgba(0, 5, 13, 0.7) 45%,
+                    rgba(0, 5, 13, 0.15)
+                ),
+                url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1600&q=80")
+                center / cover;
+        }
+
+        .hero_content {
+            max-width: 560px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin: 0 0 16px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            line-height: 1.5;
+            color: #d8e0e7;
+            margin-bottom: 26px;
+        }
+
+        .catalogue {
+            padding: 35px 5%;
+        }
+
+        .section_title {
+            font-size: 24px;
+            margin: 0 0 20px;
+        }
+
+        .movie_grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fill,
+                minmax(180px, 1fr)
+            );
+            gap: 18px;
+        }
+
+        .movie_card {
+            background: var(--card);
+            border-radius: 6px;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            transition: 0.2s;
+        }
+
+        .movie_card:hover {
+            transform: scale(1.04);
+            box-shadow: 0 6px 22px #000;
+        }
+
+        .movie_card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .movie_info {
+            padding: 12px;
+        }
+
+        .movie_info h3 {
+            font-size: 16px;
+            margin: 0 0 8px;
+        }
+
+        .movie_info p {
+            font-size: 13px;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .empty {
+            color: var(--muted);
+        }
+
+        @media (max-width: 650px) {
+            .nav {
+                padding: 0 18px;
+                gap: 16px;
+            }
+
+            .links {
+                display: none;
+            }
+
+            .hero {
+                padding: 65px 8%;
+                min-height: 340px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .movie_grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="nav">
+        <a class="brand" href="{% url 'home' %}">
+            prime <span>video</span>
+        </a>
+
+        <div class="links">
+            <a href="#home">Home</a>
+            <a href="#movies">Movies</a>
+            <a href="#tv">TV Shows</a>
+        </div>
+
+        <div class="account">
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}">Sign out</a>
+            {% else %}
+                <a href="{% url 'login' %}">Sign in</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main id="home">
+
+        {% if featured_movie %}
+            <section class="hero">
+                <div class="hero_content">
+
+                    <h1>{{ featured_movie.title }}</h1>
+
+                    <p>
+                        {{ featured_movie.description|default:'Stream exclusive entertainment, blockbuster movies and popular TV shows.' }}
+                    </p>
+
+                    <a
+                        class="button"
+                        href="{% url 'movie_detail' featured_movie.id %}"
+                    >
+                        ▶ Watch now
+                    </a>
+
+                </div>
+            </section>
+        {% endif %}
+
+        <section class="catalogue" id="movies">
+
+            <h2 class="section_title">
+                Popular movies
+            </h2>
+
+            {% if movies %}
+
+                <div class="movie_grid">
+
+                    {% for movie in movies %}
+
+                        <a
+                            class="movie_card"
+                            href="{% url 'movie_detail' movie.id %}"
+                        >
+                            <img
+                                src="{{ movie.poster_url }}"
+                                alt="{{ movie.title }} poster"
+                            >
+
+                            <div class="movie_info">
+
+                                <h3>
+                                    {{ movie.title }}
+                                </h3>
+
+                                <p>
+                                    {{ movie.release_year }} · {{ movie.genre }}
+                                </p>
+
+                            </div>
+                        </a>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <p class="empty">
+                    No movies yet. Add your first title from the admin dashboard.
+                </p>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</body>
+</html>
