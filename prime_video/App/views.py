@@ -11,5 +11,5 @@ def home(request):
 
 def movie_detail(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
-    return render(request, "movie_detail.html", {"movie": movie})
+    return render(request, "movie_details.html", {"movie": movie})
     
