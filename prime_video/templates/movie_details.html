@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ movie.title }} | Prime Video</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #00050d;
+            color: #fff;
+            font-family: Arial;
+        }
+
+        .nav {
+            padding: 20px 6%;
+            background: #0f171e;
+        }
+
+        .nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav span {
+            color: #00a8e1;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 45px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 36px;
+        }
+
+        .poster {
+            width: 100%;
+            border-radius: 6px;
+        }
+
+        .meta {
+            color: #a6b0bb;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 22px;
+            background: #00a8e1;
+            color: #00111b;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .poster {
+                max-width: 260px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="nav">
+        <a href="{% url 'home' %}">
+            prime <span>video</span>
+        </a>
+    </nav>
+
+    <main class="content">
+
+        <img
+            class="poster"
+            src="{{ movie.poster_url }}"
+            alt="{{ movie.title }} poster"
+        >
+
+        <section>
+            <h1>{{ movie.title }}</h1>
+
+            <p class="meta">
+                {{ movie.release_year }} · {{ movie.genre }}
+            </p>
+
+            <p>
+                {{ movie.description|default:'Enjoy this title on Prime Video.' }}
+            </p>
+
+            <a class="button" href="#watch">
+                ▶ Watch now
+            </a>
+        </section>
+
+    </main>
+
+</body>
+
+</html>
